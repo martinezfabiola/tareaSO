@@ -50,7 +50,7 @@ EstrucSched* Construye(char *filename){
 
 	while(fscanf(fp, "%li %c %hi %f %s", &PID, &Estado, &Prioridad, &Time, Comando) != EOF){
 
-		printf("%d\t", PID);
+		printf("%li\t", PID);
 		printf("%c\t", Estado);
 		printf("%hi\t", Prioridad);
 		printf("%.2f\t", Time);		 // .2 cantidad de decimales
@@ -161,7 +161,7 @@ Proceso *ProxProc(EstrucSched *s, COLA *q){
 	
 	if(n != NULL && p->Estado == 'L'){
 		// CAMBIAR EL ESTADO CON LA FUNCION CambiarEstado?
-		proceso->Estado = 'E';
+		p->Estado = 'E';
 		q->primero = n->next;
 		q->ultimo->next = n;
 		q->ultimo = n;
@@ -174,17 +174,17 @@ Proceso *ProxProc(EstrucSched *s, COLA *q){
 
 void Imprime(EstrucSched *s){
 	
-	(s->q0->size != 0) Imprmir(s->q0);
+	if(s->q0->size != 0) Imprimir(s->q0);
 
-	(s->q1->size != 0) Imprimir(s->q1);		
+	if(s->q1->size != 0) Imprimir(s->q1);		
 
-	(s->q2->size != 0) Imprimir(s->q2);
+	if(s->q2->size != 0) Imprimir(s->q2);
 		
-	(s->q3->size != 0) Imprimir(s->q3);
+	if(s->q3->size != 0) Imprimir(s->q3);
 
-	(s->q4->size != 0) Imprimir(s->q4);
+	if(s->q4->size != 0) Imprimir(s->q4);
 
-	(s->q5->size != 0) Imprimir(s->q5);
+	if(s->q5->size != 0) Imprimir(s->q5);
 }
 
 void Imprimir(COLA *q){
@@ -192,12 +192,12 @@ void Imprimir(COLA *q){
 	NODO *first = q->primero;
 	printf("Cola %d", q->nro);
 	printf("PID\tEstado\tTiempo\tComando\n");
-	printf("%li\t%c\t%f\t%s\n", first->proceso.PID, first->proceso.Estado, first->proceso.Time, first->proceso.Comando);
+	printf("%li\t%c\t%f\t%s\n", first->proceso->PID, first->proceso->Estado, first->proceso->Time, first->proceso->Comando);
 	
 	NODO *proximo = first->next;
 
 	while(proximo != NULL){
-		printf("%li\t%c\t%f\t%s\n", proximo->proceso.PID, proximo->proceso.Estado, proximo->proceso.Time, proximo->proceso.Comando);
+		printf("%li\t%c\t%f\t%s\n", proximo->proceso->PID, proximo->proceso->Estado, proximo->proceso->Time, proximo->proceso->Comando);
 		proximo = proximo->next;
 	}
 }
@@ -205,7 +205,7 @@ void Imprimir(COLA *q){
 void init_proceso(Proceso *p, long procesoid, float time, char estado, char* comando){
 	p->PID = procesoid;
 	p->Time = time;
-	P->Estado = estado;
+	p->Estado = estado;
 	strcpy(p->Comando, comando);
 }
 
