@@ -10,7 +10,7 @@
 * Autores: 
 *   - David Cabeza 13-10191
 *   - Fabiola Martinez 13-10838
-* Equipo: 
+* Equipo: N
 *
 * Prof. Angela Di Serio
 *
@@ -40,7 +40,7 @@ typedef struct proceso
 typedef struct nodo
 {
 	Proceso *proceso;
-	void* *next;
+	void *next;
 } NODO;
 
 typedef struct cola

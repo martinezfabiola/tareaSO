@@ -10,7 +10,7 @@
 * Autores: 
 *   - David Cabeza 13-10191
 *   - Fabiola Martinez 13-10838
-* Equipo: 
+* Equipo: N
 *
 * Prof. Angela Di Serio
 *
