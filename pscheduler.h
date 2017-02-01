@@ -27,7 +27,7 @@ funciones.
 
 */
 
-typedef char* Estado;
+typedef char Estado;
 
 typedef struct proceso
 {
@@ -85,6 +85,6 @@ void init_proceso(Proceso *p, long procesoid, float time, char estado, char* com
 
 void init_nodo(NODO *n, Proceso *p);
 
-void init_cola(COLA *q);
+void init_cola(COLA *q, int numero);
 
 void init_EstrucSched(EstrucSched *E);
