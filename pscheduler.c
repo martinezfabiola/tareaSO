@@ -25,12 +25,82 @@
 
 int main(int argc, char const *argv[])
 {
-	char *filename;
-	strcpy(filename, argv[1]);
 
-	EstrucSched *estructura = Construye(filename);
+//Verificamos el comando para ejecutar el programa sea el correcto
+if (argc != 3){
+	printf("Uso: pscheduler archivo_entrada archivo_salida\n");
+	exit(-1);
+	}
 
-	Imprime(estructura);
+// Creamos estructura de datos
+EstrucSched *estructura = Construye(filename);
+
+char *filename;
+strcpy(filename, argv[1]);
+
+int opcion;
+
+do{
+	// Falta eliminar proceso en ejecucion
+	printf("\t\t\tPSCHEDULER\n");
+	printf("Bienvenido al planificador de procesos: Indique la opcion que desea\n");
+	printf("1 ~ Insertar Proceso\n");
+	printf("2 ~ Eliminar Proceso\n");
+	printf("3 ~ Cambiar estado del Proceso\n");
+	printf("4 ~ Mostrar el contenido del pscheduler\n");
+	printf("5 ~ Salir\n");
+	printf("Tu opcion: ");
+	scanf("%d", &opcion);
+
+	if(opcion>5 || opcion<1){
+		printf("Su opcion debe estar 1 y 5\n");
+		break;
+	}
+
+	long PID;
+	char Estado;
+	short Prioridad;
+	float Time;
+	char Comando[100];
+
+	switch(opcion){
+		
+		case 1:
+			printf("Introduzca: PID  prioridad  tiempo_ejecucion  comando");
+			scanf("%li %hi %f %s", &PID, &Prioridad, &Time, Comando)
+
+			InsertarProceso(estructura, PID, Prioridad);
+			printf("Se inserto proceso correctamente\n");
+			break;
+		
+		case 2:
+			printf("Introduzca: PID  prioridad");
+			scanf("%hi %li", &PID, &Prioridad);
+			break;
+
+		case 3:
+			printf("Usted selecciono cambiar");
+			break;
+
+		case 4:
+			printf("Usted selecciono mostrar");
+			Imprime(estructura);
+			break;
+
+		case 5:
+			char* archivo_salida;
+			printf("Indique archivo_salida: ");
+			scanf("%s", archivo_salida)
+			argv[2] = archivo_salida;
+			exit(0);
+
+		default:
+			scanf("%*s");
+			printf("Su opcion debe estar 1 y 5\n");
+			break;
+		}
+
+	}while(opcion !=5);
 
 	return 0;
 }
@@ -53,7 +123,7 @@ EstrucSched* Construye(char *filename){
 		printf("%li\t", PID);
 		printf("%c\t", Estado);
 		printf("%hi\t", Prioridad);
-		printf("%.2f\t", Time);		 // .2 cantidad de decimales
+		printf("%.2f\t", Time);		 
 		printf("%s\n", Comando);
 		
 		Proceso *p = (Proceso *) malloc(sizeof(Proceso));
