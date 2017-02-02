@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 	short Prioridad;
 	float Time;
 	char Comando[100];
-	int opcion;
+	char opcion;
 
 	do{
 		printf("\t\t\tPSCHEDULER\n");
@@ -52,11 +52,12 @@ int main(int argc, char *argv[])
 		printf("6 ~ Mostrar el contenido del pscheduler\n");
 		printf("7 ~ Salir\n");
 		printf("Tu opcion: ");
-		scanf("%d", &opcion);
+		scanf("%c", &opcion);
+		getchar();
 
 			switch(opcion){
 			
-				case 1:
+				case '1':
 					printf("Insertar proceso");
 					printf("Introduzca en el orden: PID  prioridad  tiempo_ejecucion comando");
 					scanf("%li %hi %f %s", &PID, &Prioridad, &Time, Comando);
@@ -68,7 +69,7 @@ int main(int argc, char *argv[])
 					printf("Se inserto proceso correctamente\n");
 					break;
 				
-				case 2:
+				case '2':
 					printf("Eliminar proceso");
 					printf("Introduzca: PID  prioridad");
 					scanf("%hi %li", &PID, &Prioridad);
@@ -77,18 +78,18 @@ int main(int argc, char *argv[])
 					printf("Se elimino proceso correctamente");
 					break;
 
-				case 3:
+				case '3':
 					printf("Eliminar proceso en ejecucion");
 					ElimProcesoE(estructura);
 					printf("Se elimino proceso en ejecucion correctamente");
 					break;
 
-				case 4:
+				case '4':
 					printf("Proximo proceso a planificar");
 					ProxProceso(estructura);
 					break;
 
-				case 5:
+				case '5':
 					printf("Cambiar estado del proceso");
 					printf("Introduzca si desea cambiar el estado a Listo (L) o en ejecucion (E)");
 					scanf("%s", Estado);
@@ -96,11 +97,11 @@ int main(int argc, char *argv[])
 					CambiarEstado(estructura, Proceso* p, Estado)
 					break;
 
-				case 6:
+				case '6':
 					printf("ESTADO ACTUAL DE LA ESTRUCTURA DE COLAS\n");
 					Imprime(estructura);
 
-				case 7:
+				case '7':
 					printf("Antes de salir inidique el nombre del archivo de salida");
 					char* archivo_salida;
 					scanf("%s", archivo_salida)
