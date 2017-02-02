@@ -26,29 +26,79 @@
 int main(int argc, char *argv[])
 {
 
+	// Verificación de que el comando para ejecutar el programa sea correcto
+	if (argc != 3){
+	
+		printf("Uso: pscheduler archivo_entrada archivo_salida\n");
+		exit(-1);
+	}
+
+	// Creamos estructura de datos
 	EstrucSched *estructura = Construye(argv[1]);
 	
-	Imprime(estructura);
+	int opcion;
 
-	ProxProceso(estructura);
+	do{
+		// Falta eliminar proceso en ejecucion
+		printf("\t\t\tPSCHEDULER\n");
+		printf("Bienvenido al planificador de procesos: Indique la opcion que desea\n");
+		printf("1 ~ Insertar Proceso\n");
+		printf("2 ~ Eliminar Proceso\n");
+		printf("3 ~ Cambiar estado del Proceso\n");
+		printf("4 ~ Mostrar el contenido del pscheduler\n");
+		printf("5 ~ Salir\n");
+		printf("Tu opcion: ");
+		scanf("%d", &opcion);
 
-	Imprime(estructura);
+		if(opcion>5 || opcion<1){
+			printf("Su opcion debe estar 1 y 5\n");
+			break;
+		}
 
-	ProxProceso(estructura);
+		switch(opcion){
+		
+			case 1:
+				long PID;
+				char Estado;
+				short Prioridad;
+				float Time;
+				char Comando[100];
 
-	ElimProcesoE(estructura);
+				printf("Introduzca en el orden: PID  prioridad  tiempo_ejecucion comando");
+				scanf("%li %hi %f %s", &PID, &Prioridad, &Time, Comando);
 
-	Imprime(estructura);
+				Proceso *p = (Proceso *) malloc(sizeof(Proceso));
+				init_proceso(p, PID, Time, 'L', Comando);
+				InsertarProceso(estructura, p, Prioridad);
 
-	ProxProceso(estructura);
+				printf("Se inserto proceso correctamente\n");
+				break;
+			
+			case 2:
+				printf("Introduzca: PID  prioridad");
+				scanf("%hi %li", &PID, &Prioridad);
+				break;
 
-	Imprime(estructura);
+			case 3:
+				printf("Usted selecciono cambiar");
+				break;
 
-	ElimProcesoE(estructura);
+			case 4:
+				printf("Usted selecciono mostrar");
+				Imprime(estructura);
+				break;
 
-	ElimProcesoE(estructura);
+			case 5:
+				printf("Llamada a la funcion de archivo salida");
+				exit(0);
 
-	Imprime(estructura);
+			default:
+				scanf("%*s");
+				printf("Su opcion debe estar 1 y 5\n");
+				break;
+			}
+
+	}while(opcion !=5);
 
 	return 0;
 }
