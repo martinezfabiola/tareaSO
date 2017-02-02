@@ -1,10 +1,8 @@
-CC=gcc
-CFLAGS=-I.
-DEPS = pscheduler.h
-OBJ = pscheduler.o
+pscheduler: pscheduler.o main.o
+	gcc -o pscheduler pscheduler.o main.o
 
-%.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+main.o: pscheduler.o main.c
+	gcc -c main.c
 
-pscheduler: $(0BJ)
-	gcc -o $@ $^ $(CFLAGS)
+pscheduler.o: pscheduler.c pscheduler.h
+	gcc -c pscheduler.c

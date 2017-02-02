@@ -1,4 +1,4 @@
-/*****************************************************************************
+/***************************************************************************************************
 * Universidad Simon Bolivar
 * Departamento de Computacion y Tecnologia de la Informacion
 * CI3825: Laboratorio de Sistemas Operativos 
@@ -15,7 +15,7 @@
 * Prof. Angela Di Serio
 *
 * Febrero, 2017.
-*****************************************************************************/
+***************************************************************************************************/
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -40,7 +40,8 @@ typedef struct proceso
 typedef struct nodo
 {
 	Proceso *proceso;
-	void *next;
+	struct nodo *next;
+	struct nodo *prev;
 } NODO;
 
 typedef struct cola
