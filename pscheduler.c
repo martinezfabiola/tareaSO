@@ -23,12 +23,30 @@
 
 #include "pscheduler.h"
 
-int main(int argc, char const *argv[])
+int main(int argc, char *argv[])
 {
-	char *filename;
-	strcpy(filename, argv[1]);
 
-	EstrucSched *estructura = Construye(filename);
+	EstrucSched *estructura = Construye(argv[1]);
+	
+	Imprime(estructura);
+
+	ProxProceso(estructura);
+
+	Imprime(estructura);
+
+	ProxProceso(estructura);
+
+	ElimProcesoE(estructura);
+
+	Imprime(estructura);
+
+	ProxProceso(estructura);
+
+	Imprime(estructura);
+
+	ElimProcesoE(estructura);
+
+	ElimProcesoE(estructura);
 
 	Imprime(estructura);
 
@@ -50,12 +68,6 @@ EstrucSched* Construye(char *filename){
 
 	while(fscanf(fp, "%li %c %hi %f %s", &PID, &Estado, &Prioridad, &Time, Comando) != EOF){
 
-		printf("%li\t", PID);
-		printf("%c\t", Estado);
-		printf("%hi\t", Prioridad);
-		printf("%.2f\t", Time);		 // .2 cantidad de decimales
-		printf("%s\n", Comando);
-		
 		Proceso *p = (Proceso *) malloc(sizeof(Proceso));
 		init_proceso(p, PID, Time, Estado, Comando);
 		InsertarProceso(E, p, Prioridad);
@@ -68,18 +80,24 @@ EstrucSched* Construye(char *filename){
 void InsertarProceso(EstrucSched* s, Proceso *p, short prioridad){
 	
 	switch(prioridad){
-		case '0':
+		case 0:
 			insertarProc(s->q0, p);
-		case '1':
+			break;
+		case 1:
 			insertarProc(s->q1, p);
-		case '2':
+			break;
+		case 2:
 			insertarProc(s->q2, p);
-		case '3':
+			break;
+		case 3:
 			insertarProc(s->q3, p);
-		case '4':
+			break;
+		case 4:
 			insertarProc(s->q4, p);
-		case '5':
+			break;
+		case 5:
 			insertarProc(s->q5, p);
+			break;
 	}
 }
 
@@ -101,22 +119,84 @@ void insertarProc(COLA *q, Proceso *p){
 	q->size++;
 }
 
-/* Devuelve el proximo proceso a planificar.
-   La rutina comienza buscando por la cola de mayor prioridad (q0) un proceso 
-   que este en estado Listo. Si es encontrado, se coloca al final de su cola y se
-   cambia su estado a En Ejecucion. Si ya existe un proceso en ejecucion, este 
-   es detenido para planificar el otro. Si no encuentra ningun proceso,
-   devuelve NULL.
+/** 
+ *  Elimina el proceso que este en ejecucion actualmente.
+ *
+ *	Ejemplo de eliminacion de un proceso en ejecucion en el que luego se de
+ *  ponerse en ejecucion, se insertaron 3 procesos:
+ *	E(0) L(1) L(2) L(3)
+ *  L(1) L(2) L(3)
+ *
+ *	Ejemplo:
+ *	L(0) L(1) L(2) L(3)
+ *	L(1) L(2) L(3) E(0)
+ *
+ *	Ejemplo: <--- Este caso FALLA!
+ *	L(0) L(1) L(2)
+ *  ProxProceso()
+ *	L(1) L(2) E(0)
+ *  InsertarProceso()
+ *  L(1) L(2) E(0) L(3)
+ *  ElimProcesoE()
+ *  L(1) L(2) L(3)
+ *
+ *  HINT: Guiar la busqueda en base al estado de los procesos y no en base a prpx
+ *  ademas guardar siempre el anterior el actual y el proximo para conectar el
+ *  anterior con el proximo
+*/
+void ElimProcesoE(EstrucSched *s){
+	
+	if(s->enEjecucion){
 
-  Ejemplo de un proceso detenido para planificar otro:
-  	q0: E(0) L(1) L(2) L(3) **
-  	ProxProceso(s)
-  	q0: L(0) L(2) L(3) E(1)
+		NODO *nodo = s->enEjecucion->primero;
+		NODO *proximo = nodo->next;
+		
+		if (proximo){
+			while(proximo->next && nodo->proceso->Estado != 'E'){
+				nodo = proximo;
+				proximo = nodo->next;
+			}
+			nodo->next = NULL;
+			s->enEjecucion->ultimo = nodo;
+			free(proximo);
+		}
+		else{
+			s->enEjecucion->primero = NULL;
+			s->enEjecucion->ultimo = NULL;
+			free(nodo);
+		}
 
-  ** Se supone que los procesos 1, 2 y 3 fueron insertados a q0 mediante la interfaz
-  de usuario. El proceso 0 teoricamente siempre fue el ultimo de la cola.
+		s->enEjecucion->size--;
+		s->enEjecucion = NULL;
+	}
+	else{
+		printf("No hay ningun proceso en ejecucion.\n");
+	}
+}
+
+/** 
+ *  Devuelve el proximo proceso a planificar.
+ *  La rutina comienza buscando por la cola de mayor prioridad (q0) un proceso 
+ *  que este en estado Listo. Si es encontrado, se coloca al final de su cola y se
+ *  cambia su estado a en ejecucion. Si ya existe un proceso en ejecucion o no 
+ *  se encuentra ningun proceso, se retornara el valor NULL.
+ * 
+ *  @param s Estructura con las seis colas.
+ *  @return Proceso que es planificado 
+ * 
+ *  Ejemplo:
+ *  q0: vacia
+ * 	q1: L(0) L(1) L(2) L(3)
+ * 	ProxProceso(s)
+ * 	q0: vacia
+ * 	q1: L(1) L(2) L(3) E(0)
 */
 Proceso *ProxProceso(EstrucSched *s){
+
+	if(s->enEjecucion){
+		printf("Ya existe un proceso en ejecucion. Intente eliminarlo primero.\n");
+		return NULL;
+	}
 	
 	Proceso *p;
 
@@ -150,27 +230,23 @@ Proceso *ProxProceso(EstrucSched *s){
 
 Proceso *ProxProc(EstrucSched *s, COLA *q){
 
-	NODO *n = q->primero;
-	Proceso *p = n->proceso;
-
-	// Teoricamente si los elementos de la cola son más de 1 y el primero 
-	// "no esta listo", el segundo lo esta.
-	// Ejemplo: E(0) L(1) L(2) -> L(0) L(2) E(1)
-	// Ejemplo: L(0) L(1) L(2) -> L(1) L(2) E(0)
-	// Ejemplo: L(0) -> E(0) 
-	
-	if(n != NULL && p->Estado == 'L'){
-		// CAMBIAR EL ESTADO CON LA FUNCION CambiarEstado?
-		p->Estado = 'E';
-		q->primero = n->next;
-		q->ultimo->next = n;
-		q->ultimo = n;
-		s->enEjecucion = n;
-		return p;
+	if(q->primero != NULL){
+		q->primero->proceso->Estado = 'E';
+		q->ultimo->next = q->primero;
+		q->ultimo = q->primero;
+		q->primero = q->primero->next;
+		q->ultimo->next = NULL;
+		s->enEjecucion = q;
+		return q->ultimo->proceso;
 	}
 
 	return NULL;
 }
+
+void CambiarEstado(EstrucSched *s, Proceso* p, Estado newestado){
+	p->Estado = newestado;
+}
+
 
 void Imprime(EstrucSched *s){
 	
@@ -190,14 +266,14 @@ void Imprime(EstrucSched *s){
 void Imprimir(COLA *q){
 
 	NODO *first = q->primero;
-	printf("Cola %d", q->nro);
+	printf("Cola %d\n", q->nro);
 	printf("PID\tEstado\tTiempo\tComando\n");
-	printf("%li\t%c\t%f\t%s\n", first->proceso->PID, first->proceso->Estado, first->proceso->Time, first->proceso->Comando);
+	printf("%li\t%c\t%.2f\t%s\n", first->proceso->PID, first->proceso->Estado, first->proceso->Time, first->proceso->Comando);
 	
 	NODO *proximo = first->next;
 
 	while(proximo != NULL){
-		printf("%li\t%c\t%f\t%s\n", proximo->proceso->PID, proximo->proceso->Estado, proximo->proceso->Time, proximo->proceso->Comando);
+		printf("%li\t%c\t%.2f\t%s\n", proximo->proceso->PID, proximo->proceso->Estado, proximo->proceso->Time, proximo->proceso->Comando);
 		proximo = proximo->next;
 	}
 }

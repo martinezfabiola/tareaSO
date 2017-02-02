@@ -53,7 +53,7 @@ typedef struct cola
 typedef struct EstrucSched
 {
 	COLA *q0, *q1, *q2, *q3, *q4, *q5;
-	NODO *enEjecucion;
+	COLA *enEjecucion;
 
 } EstrucSched;
 

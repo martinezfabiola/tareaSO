@@ -6,14 +6,25 @@
 
 
 ------------------------------ David -------------------------------------------
-Actualizado @ 01/02/07
+Actualizado @ 02/02/07
 
-@ ProxProceso()
- - Si ya hay un proceso ejecutandose, se detiene o se devuelve NULL?
+Compilar con debugger:
 
-struct nodo
- - No se puede definir un NODO dentro del struct NODO, no lo reconoce. void* y
- casting?
+gcc pscheduler.c -g (el manual de gcc indica que se permite usar -o)
+gdb ./a.out
+set args datos
+show args
+run
+backtrace
+
+@ ElimProcesoE
+	- Verificar correcto funcionamiento
+
+Faltan: ElimProceso, Readme, Documentacion, Escribir archivo de salida, makefile
+
+Ver si el manejo de la memoria es actualmente limpio.
+
+Que hay con que el header se llame igual que el principal?
 
 --------------------------------------------------------------------------------
 
