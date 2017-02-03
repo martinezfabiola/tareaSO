@@ -228,13 +228,15 @@ la que se buscara el proximo proceso.
 Proceso *ProxProc(EstrucSched *s, COLA *q){
 
 	NODO *tmp = q->primero;
-	q->primero = tmp->next;
-	q->primero->prev = NULL;
 
-	tmp->prev = q->ultimo;
-	q->ultimo->next = tmp;
-	q->ultimo = tmp;
-	q->ultimo->next = NULL;
+	if (q->size != 1){
+		q->primero = tmp->next;
+		q->primero->prev = NULL;
+		tmp->prev = q->ultimo;
+		q->ultimo->next = tmp;
+		q->ultimo = tmp;
+		q->ultimo->next = NULL;
+	}
 
 	q->ultimo->proceso->Estado = 'E';
 	s->enEjecucion = q;
@@ -258,20 +260,32 @@ void ElimProceso(EstrucSched *s, long pid, short prio){
 	if (prio == 5) cola = s->q5;
 
 	NODO* tmp = cola->primero;
-
+	
+	if(s->enEjecucion){
+		if(ProcEnEjec(s)->proceso->PID == pid) s->enEjecucion = NULL;
+	}
+	
 	while(tmp != NULL) {
 		
 		if (tmp->proceso->PID == pid) {
+
+
 			if (cola->size == 1){
 				cola->primero = NULL;
 				cola->ultimo = NULL;
 			}
 
 			else{
-				if(tmp->prev){
-					tmp->prev->next = tmp->next;
+				if (!tmp->prev){
+					cola->primero = tmp->next;
+					cola->primero->prev = NULL; 
 				}
-				if(tmp->next){
+				else if (!tmp->next){
+					cola->ultimo = tmp->prev;
+					cola->ultimo->next = NULL;
+				}
+				else{
+					tmp->prev->next = tmp->next;
 					tmp->next->prev = tmp->prev;
 				}
 			}
@@ -399,14 +413,17 @@ void writeSalida(COLA *q, FILE *f){
 
 NODO *ProcEnEjec(EstrucSched *s){
 
-	COLA *cola = s->enEjecucion;
+	if(s->enEjecucion){
 
-	NODO* tmp = cola->primero;
+		COLA *cola = s->enEjecucion;
 
-	while(tmp != NULL){
-		if (tmp->proceso->Estado == 'E') {
-			return tmp;
+		NODO* tmp = cola->primero;
+
+		while(tmp != NULL){
+			if (tmp->proceso->Estado == 'E') {
+				return tmp;
+			}
+			tmp = tmp->next;
 		}
-		tmp = tmp->next;
 	}
 }
