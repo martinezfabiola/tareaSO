@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 	// Verificación de que el comando para ejecutar el programa sea correcto
 	if (argc != 3){
 	
-		printf("Uso: pscheduler archivo_entrada archivo_salida\n");
+		printf("--Uso: pscheduler archivo_entrada archivo_salida\n");
 		exit(-1);
 	}
 
@@ -41,11 +41,11 @@ int main(int argc, char *argv[])
 	do{
 		printf("\n\t\t\tPSCHEDULER\n");
 		printf("Bienvenido al planificador de procesos: Indique la opcion que desea\n");
-		printf("1 ~ Insertar Proceso\n");
-		printf("2 ~ Eliminar Proceso\n");
-		printf("3 ~ Eliminar Proceso en Ejecucion\n");
-		printf("4 ~ Proximo Proceso a Planificar\n");
-		printf("5 ~ Cambiar estado del Proceso\n");
+		printf("1 ~ Insertar proceso\n");
+		printf("2 ~ Eliminar proceso\n");
+		printf("3 ~ Eliminar proceso en ejecucion\n");
+		printf("4 ~ Proximo proceso a planificar\n");
+		printf("5 ~ Cambiar estado del proceso\n");
 		printf("6 ~ Mostrar el contenido del pscheduler\n");
 		printf("7 ~ Salir\n");
 		printf("Tu opcion: ");
@@ -55,55 +55,66 @@ int main(int argc, char *argv[])
 			switch(opcion){
 			
 				case '1':
-					printf("\nIntroduzca en el orden: PID  prioridad  tiempo_ejecucion comando\n");
+					printf("\n--Introduzca en el orden: PID prioridad tiempo_ejecucion comando\n");
 					scanf("%li %hi %f %s", &PID, &Prioridad, &Time, Comando);
 
 					Proceso *p = (Proceso *) malloc(sizeof(Proceso));
 					init_proceso(p, PID, Time, 'L', Comando);
 					InsertarProceso(estructura, p, Prioridad);
 
-					printf("\nProceso insertado correctamente\n");
+					getchar();
 					break;
 				
 				case '2':
-					printf("\nIntroduzca los argumentos en el orden: PID prioridad\n");
-					scanf("%hi %li", &PID, &Prioridad);
+					printf("\n--Introduzca los argumentos en el orden: PID prioridad\n");
+					scanf("%li %hi", &PID, &Prioridad);
+
 					ElimProceso(estructura, PID, Prioridad);
 
-					printf("\nSe elimino proceso correctamente");
+					getchar();
 					break;
 
 				case '3':
 					ElimProcesoE(estructura);
-					
-					printf("\nSe elimino proceso en ejecucion correctamente");
 					break;
 
 				case '4':{
 					Proceso *proc = ProxProceso(estructura);
-					
-					printf("\nEl proximo proceso a planificar es el de PID: %li", p->PID);								
 					break;
 				}
-				case '5':
-					printf("\nIntroduzca si desea cambiar el estado a Listo (L) o en ejecucion (E)");
-					scanf("%s", &Estado);
-
-					//CambiarEstado(estructura, Proceso* p, Estado)
-					break;
-
+				case '5':{
+					if (estructura->enEjecucion){
+						char yn;
+						printf("Se cambiara el proceso en ejecucion a listo\n");
+						printf("Esta seguro de esto? s/n: ");
+						scanf("%c", &yn);
+						getchar();
+						printf("\n");
+						if(yn == 's'){
+							Proceso *EnEjec = ProcEnEjec(estructura)->proceso;
+							CambiarEstado(estructura, EnEjec, 'L');
+							break;
+						}
+					}
+					else{
+						printf("Actualmente no hay ningun proceso en ejecucion\n");
+						break;
+					}
+				}
 				case '6':
-					printf("\nEstado actual de la estructura de colas\n");
+					printf("\n--Estado actual de la estructura de colas\n");
 					Imprime(estructura);
 					break;
 
 				case '7':
 					Salida(estructura, argv[2]);
-					printf("\nHasta luego!\n");
+					printf("Se escribio el contenido del planificador en el archivo \"%s\"\n", argv[2]);
+					printf("Hasta luego!\n");
 					exit(0);
 
 				default:
 					printf("Su opcion debe estar entre los valores 1 y 7\n");
+					getchar();
 					break;
 			}
 

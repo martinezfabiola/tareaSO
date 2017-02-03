@@ -93,3 +93,5 @@ void init_EstrucSched(EstrucSched *E);
 int Salida(EstrucSched *E, char *filename);
 
 void writeSalida(COLA *q, FILE *f);
+
+NODO *ProcEnEjec(EstrucSched *s);

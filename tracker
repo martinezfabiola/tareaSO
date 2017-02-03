@@ -6,7 +6,7 @@
 
 
 ------------------------------ David -------------------------------------------
-Actualizado @ 02/02/07
+Actualizado @ 03/02/07
 
 Uso del debugger (gdb):
 
@@ -16,9 +16,7 @@ show args (opcional para ver los argumentos)
 run
 backtrace
 
-Faltan: ProxProceso, ElimProcesoE, Readme, Documentacion
-
-Ver si el manejo de la memoria es actualmente limpio.
+@ ProxProc no funciona.
 
 --------------------------------------------------------------------------------
 

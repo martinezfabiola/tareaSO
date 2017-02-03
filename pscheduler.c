@@ -135,6 +135,8 @@ void InsertarProceso(EstrucSched* s, Proceso *p, short prioridad){
 		case 5:
 			insertarProc(s->q5, p);
 			break;
+		default:
+			break;
 	}
 }
 
@@ -167,35 +169,28 @@ void insertarProc(COLA *q, Proceso *p){
 el valor de E (EnEjecucion).
 - Parametros de entrada: apuntador a la estructura de cola tipo EstrucShed en la que se quiere eli-
 minar el proceso.
-- Parametros de salida:
 */
 void ElimProcesoE(EstrucSched *s){
 	
 	if(s->enEjecucion){
-
-		NODO *nodo = s->enEjecucion->primero;
-		NODO *proximo = nodo->next;
-		
-		if (proximo){
-			while(proximo->next && nodo->proceso->Estado != 'E'){
-				nodo = proximo;
-				proximo = nodo->next;
-			}
-			nodo->next = NULL;
-			s->enEjecucion->ultimo = nodo;
-			free(proximo);
-		}
-		else{
+		NODO *EnEjecucion = ProcEnEjec(s);
+		if (s->enEjecucion->size == 1){
 			s->enEjecucion->primero = NULL;
 			s->enEjecucion->ultimo = NULL;
-			free(nodo);
 		}
+		else{
+			if(EnEjecucion->prev){
+				EnEjecucion->prev->next = EnEjecucion->next;
+			}
 
+			if(EnEjecucion->next){
+				EnEjecucion->next->prev = EnEjecucion->prev;
+			}
+		}
+		free(EnEjecucion->proceso);
+		free(EnEjecucion);
 		s->enEjecucion->size--;
 		s->enEjecucion = NULL;
-	}
-	else{
-		printf("No hay ningun proceso en ejecucion.\n");
 	}
 }
 
@@ -207,36 +202,19 @@ void ElimProcesoE(EstrucSched *s){
 */
 Proceso *ProxProceso(EstrucSched *s){
 
-	if(s->enEjecucion){
-		printf("Ya existe un proceso en ejecucion. Intente eliminarlo primero.\n");
-		return NULL;
-	}
+	if(s->enEjecucion) return NULL;
 	
-	Proceso *p;
+	if (s->q0->size > 0) return ProxProc(s, s->q0);
 
-	p = ProxProc(s, s->q0);
+	else if (s->q1->size > 0) return ProxProc(s, s->q1);
 
-	if(p) return p;
+	else if (s->q2->size > 0) return ProxProc(s, s->q2);
 
-	p = ProxProc(s, s->q1);
+	else if (s->q3->size > 0) return ProxProc(s, s->q3);
 
-	if(p) return p;
+	else if (s->q4->size > 0) return ProxProc(s, s->q4);
 
-	p = ProxProc(s, s->q2);
-
-	if(p) return p;
-
-	p = ProxProc(s, s->q3);
-
-	if(p) return p;
-
-	p = ProxProc(s, s->q4);
-
-	if(p) return p;
-
-	p = ProxProc(s, s->q5);
-
-	if(p) return p;
+	else if (s->q5->size > 0) return ProxProc(s, s->q5);
 
 	return NULL;
 }
@@ -249,16 +227,18 @@ la que se buscara el proximo proceso.
 */
 Proceso *ProxProc(EstrucSched *s, COLA *q){
 
-	if(q->primero != NULL){
-		q->primero->proceso->Estado = 'E';
-		q->ultimo->next = q->primero;
-		q->ultimo = q->primero;
-		q->primero = q->primero->next;
-		q->ultimo->next = NULL;
-		s->enEjecucion = q;
-		return q->ultimo->proceso;
-	}
-	return NULL;
+	NODO *tmp = q->primero;
+	q->primero = tmp->next;
+	q->primero->prev = NULL;
+
+	tmp->prev = q->ultimo;
+	q->ultimo->next = tmp;
+	q->ultimo = tmp;
+	q->ultimo->next = NULL;
+
+	q->ultimo->proceso->Estado = 'E';
+	s->enEjecucion = q;
+	return q->ultimo->proceso;
 }
 
 /*
@@ -280,24 +260,28 @@ void ElimProceso(EstrucSched *s, long pid, short prio){
 	NODO* tmp = cola->primero;
 
 	while(tmp != NULL) {
+		
 		if (tmp->proceso->PID == pid) {
 			if (cola->size == 1){
 				cola->primero = NULL;
 				cola->ultimo = NULL;
-				free(tmp->proceso);
-				free(tmp);
 			}
 
 			else{
-				tmp->prev = tmp->next;
-				tmp->next = NULL;
-				free(tmp->next->proceso);
-				free(tmp->next);
+				if(tmp->prev){
+					tmp->prev->next = tmp->next;
+				}
+				if(tmp->next){
+					tmp->next->prev = tmp->prev;
+				}
 			}
 			break;
 		}
 		tmp = tmp->next;
 	}
+	free(tmp->proceso);
+	free(tmp);
+	cola->size--;
 }
 
 /*
@@ -307,7 +291,10 @@ troducidos por el usuario son Listo o EnEjecucion.
 cual se le quiere cambiar estado.
 - Parametros de salida:
 */
-void CambiarEstado(EstrucSched *s, Proceso* p, Estado newestado){
+void CambiarEstado(EstrucSched *s, Proceso *p, Estado newestado){
+	if (p == ProcEnEjec(s)->proceso){
+		s->enEjecucion = NULL;
+	}
 	p->Estado = newestado;
 }
 
@@ -319,16 +306,22 @@ void CambiarEstado(EstrucSched *s, Proceso* p, Estado newestado){
 void Imprime(EstrucSched *s){
 	
 	if(s->q0->size != 0) Imprimir(s->q0);
+	else printf("Cola 0\nEsta cola se encuentra vacia\n\n");
 
-	if(s->q1->size != 0) Imprimir(s->q1);		
+	if(s->q1->size != 0) Imprimir(s->q1);
+	else printf("Cola 1\nEsta cola se encuentra vacia\n\n");
 
 	if(s->q2->size != 0) Imprimir(s->q2);
+	else printf("Cola 2\nEsta cola se encuentra vacia\n\n");
 		
 	if(s->q3->size != 0) Imprimir(s->q3);
+	else printf("Cola 3\nEsta cola se encuentra vacia\n\n");
 
 	if(s->q4->size != 0) Imprimir(s->q4);
+	else printf("Cola 4\nEsta cola se encuentra vacia\n\n");
 
 	if(s->q5->size != 0) Imprimir(s->q5);
+	else printf("Cola 5\nEsta cola se encuentra vacia\n\n");	
 }
 
 /*
@@ -364,11 +357,22 @@ int Salida(EstrucSched *s, char *filename){
 	}
 
 	if(s->q0->size != 0) writeSalida(s->q0, f);
+	else fprintf(f, "Cola 0\nEsta cola se encuentra vacia\n\n");
+
 	if(s->q1->size != 0) writeSalida(s->q1, f);
+	else fprintf(f, "Cola 1\nEsta cola se encuentra vacia\n\n");
+
 	if(s->q2->size != 0) writeSalida(s->q2, f);
+	else fprintf(f, "Cola 2\nEsta cola se encuentra vacia\n\n");
+
 	if(s->q3->size != 0) writeSalida(s->q3, f);
+	else fprintf(f, "Cola 3\nEsta cola se encuentra vacia\n\n");
+
 	if(s->q4->size != 0) writeSalida(s->q4, f);
+	else fprintf(f, "Cola 4\nEsta cola se encuentra vacia\n\n");
+
 	if(s->q5->size != 0) writeSalida(s->q5, f);
+	else fprintf(f, "Cola 5\nEsta cola se encuentra vacia\n\n");
 
 	fclose(f);
 	return 0;
@@ -391,4 +395,18 @@ void writeSalida(COLA *q, FILE *f){
 
 	fprintf(f, "\n");
 
+}
+
+NODO *ProcEnEjec(EstrucSched *s){
+
+	COLA *cola = s->enEjecucion;
+
+	NODO* tmp = cola->primero;
+
+	while(tmp != NULL){
+		if (tmp->proceso->Estado == 'E') {
+			return tmp;
+		}
+		tmp = tmp->next;
+	}
 }
