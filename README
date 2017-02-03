@@ -1,0 +1,53 @@
+Planificador de Procesos pscheduler 04/02/2017
+
+--------------------------------------------------------------------------------
+DESCRICIÓN DEL PROGRAMA
+--------------------------------------------------------------------------------
+- La estructura de datos utilizada fue una cola de prioridades, donde la cola
+mayor prioridad corresponde a la cola ¨qo¨ y la de menor prioridad a la cola 
+¨q5¨. Esta estructura de colas tipo EstrucShed contiene a su vez nodos de tipo 
+Nodo que se pueden manejar con apuntadores al nodo siguiente y al nodo anterior 
+de cada cola respectivamente. Dichos nodos contienen los procesos que seran e-
+jecutados por el planificador, estos procesos son del tipo Proceso y tiene la 
+informacion y estado de cada proceso (PID, Estado, Tiempo de ejecuion, Comando).
+
+- La declaración de la estructura de colas de prioridad, asi como el prototipo 
+de cada función y las librerias usadas se encuentran en el archivo ¨pscheduler.h.
+
+- Se crearon distintas funciones usadas por las colas para el manejo de los pro-
+cesos como insertar, eliminar, cambiar estado del proceso, etc. Dichas funiones
+se encuentra en el archivo ¨pscheduler.c¨.
+
+- El programa principal ofrece al usuario a as disinttas opciones con las cuales
+trabajan los procesos y asi poder hacer uso de ellas, dicho programa se encuen-
+tra en el archivo main.c
+
+- Finalmente se creó un archivo makefile que permite compilar de forma simultá-
+nea las dependecias de los archivosfuentes para producir el ejecutable.
+
+--------------------------------------------------------------------------------
+EJECUCIÓN
+--------------------------------------------------------------------------------
+Desde la linea de comando se debe invocar:
+
+1. makefile
+2. $ pscheduler datos archsalid
+
+Donde datos es el archivo de entrada que contiene la información de los procesos 
+y archsalid es el archivo de salida en el cual se mostrará el estado actual de 
+cada proceso.
+
+================================================================================
+
+Autores:
+- David Cabeza #13-10191
+- Fabiola Martínez #13-10838
+
+cabezadavide@gmail.com
+fabimartinezperez@gmail.com
+
+Febrero, 2017
+Universidad Simón Bolívar
+Departamento de Computación y T.I.
+Taller de Sistemas de Operación I
+Tarea 1
