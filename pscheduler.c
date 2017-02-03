@@ -77,8 +77,8 @@ void init_proceso(Proceso *p, long procesoid, float time, char estado, char* com
 
 /*  
 	- Construye: inicializa el planificador de procesos desde un archivo de texto.
-	- Parametros de entrada: nombre del archivo de texto que contiene la información 
-	  del planificador.
+	- Parametros de entrada: nombre del archivo de texto que contiene la infor-
+	mación del planificador.
 	- Parametros de salida: estructura tipo EstrucSched que representa el plani-
 	ficador de procesos
 */
@@ -109,10 +109,11 @@ EstrucSched* Construye(char *filename){
 }
 
 /*	
-	- InsertarProceso: permite insertar un proceso en la cola de prioridad que corresponda.
+	- InsertarProceso: permite insertar un proceso en la cola de prioridad que 
+	corresponda.
 	- Parametros de entrada: s apuntador a una estructura de cola tipo EstrucShed, 
-	  p apuntador al proceso, prioridad entero que indica la prioridad de la cola 
-	  donde se insertara el proceso.
+	p apuntador al proceso, prioridad entero que indica la prioridad de la cola 
+	donde se insertara el proceso.
 */
 void InsertarProceso(EstrucSched* s, Proceso *p, short prioridad){
 	
@@ -165,10 +166,10 @@ void insertarProc(COLA *q, Proceso *p){
 }
 
 /*
-- ElimProcesoE: se encarga de eliminar el próximo proceso a ejecutar, el único que tiene en su esta-
-el valor de E (EnEjecucion).
-- Parametros de entrada: apuntador a la estructura de cola tipo EstrucShed en la que se quiere eli-
-minar el proceso.
+- ElimProcesoE: se encarga de eliminar el próximo proceso a ejecutar, el único 
+que tiene en su estado el valor de E (EnEjecucion).
+- Parametros de entrada: apuntador a la estructura de cola tipo EstrucShed en la 
+que se quiere eliminar el proceso.
 */
 void ElimProcesoE(EstrucSched *s){
 	
@@ -196,9 +197,10 @@ void ElimProcesoE(EstrucSched *s){
 
 
 /*
-- ProxProceso:
-- Parametros de entrada:
-- Parametros de salida:
+- ProxProceso: se encarga de buscar en las colas el proximo proceso que este lis-
+para ejecutar de cambiando su estado de Listo a EnEjecucion
+- Parametros de entrada: apuntador a la estructura de colas.
+- Parametros de salida: apuntador al proximo proceso a ejecutar.
 */
 Proceso *ProxProceso(EstrucSched *s){
 
@@ -221,9 +223,10 @@ Proceso *ProxProceso(EstrucSched *s){
 
 /*
 - ProxProc: permite obtener el siguiente proceso a planificar.
-- Parametros de entrada: apuntador a la estructura de cola tipo EstrucShed y apuntador a la cola en 
-la que se buscara el proximo proceso.
-- Parametros de salida: objeto tipo proceso que representa el proximo proceso a planificar.
+- Parametros de entrada: apuntador a la estructura de cola tipo EstrucShed y a-
+puntador a la cola en la que se buscara el proximo proceso.
+- Parametros de salida: objeto tipo proceso que representa el proximo proceso a 
+planificar.
 */
 Proceso *ProxProc(EstrucSched *s, COLA *q){
 
@@ -243,8 +246,9 @@ Proceso *ProxProc(EstrucSched *s, COLA *q){
 
 /*
 - ElimProceso: se encarga de eliminar un proceso de la estructura de colas.
-- Parametros de entrada: apuntador a la estructura de cola tipo EstrucShed, identificador del proce-
-so a eliminar y prioridad de la cola donde se quiere eliminar el proceso.
+- Parametros de entrada: apuntador a la estructura de cola tipo EstrucShed, i-
+dentificador del proceso a eliminar y prioridad de la cola donde se quiere eli-
+minar el proceso.
 - Parametros de salida:
 */
 void ElimProceso(EstrucSched *s, long pid, short prio){
@@ -285,10 +289,10 @@ void ElimProceso(EstrucSched *s, long pid, short prio){
 }
 
 /*
-- CambiarEstado: permite cambiar el valor del estado de un proceso, suponiendo que los valores in-
-troducidos por el usuario son Listo o EnEjecucion.
-- Parametros de entrada: apuntador a la estructura de colas tipo EstrucShed, apuntador al proceso al
-cual se le quiere cambiar estado.
+- CambiarEstado: permite cambiar el valor del estado de un proceso, suponiendo 
+que los valores introducidos por el usuario son Listo o EnEjecucion.
+- Parametros de entrada: apuntador a la estructura de colas tipo EstrucShed, a-
+puntador al proceso al cual se le quiere cambiar estado.
 - Parametros de salida:
 */
 void CambiarEstado(EstrucSched *s, Proceso *p, Estado newestado){
@@ -299,7 +303,8 @@ void CambiarEstado(EstrucSched *s, Proceso *p, Estado newestado){
 }
 
 /*
-- Imprime: se encarga de mostrar por salida estandar el estado correspondiente a cada cola.
+- Imprime: se encarga de mostrar por salida estandar el estado correspondiente a 
+cada cola.
 - Parametros de entrada: apuntador a la estructura de cola tipo EstrucShed.
 - Parametros de salida:
 */
@@ -325,8 +330,8 @@ void Imprime(EstrucSched *s){
 }
 
 /*
-- Imprimir: perimite mostrar la informacion correspondiente a cada cola sobre PID, Estado, Tiempo y 
-Comando.
+- Imprimir: perimite mostrar la informacion correspondiente a cada cola sobre 
+PID, Estado, Tiempo y Comando.
 - Parametros de entrada: apuntador a la cola a la cual se quiere mostrar su estado.
 - Parametros de salida:
 */
@@ -347,6 +352,12 @@ void Imprimir(COLA *q){
 	printf("\n");
 }
 
+/*
+- Salida: se encarga se escribir en el archivo el estado actual de cada cola.
+- Parametros de entrada: apuntador a la estructura de colas y el nombre del ar-
+chivo de salida donde se guardaran los datos.
+- Parametros de salida: 
+*/
 int Salida(EstrucSched *s, char *filename){
 
 	FILE *f = fopen(filename, "w");
@@ -379,6 +390,11 @@ int Salida(EstrucSched *s, char *filename){
 
 }
 
+/*
+- writeSalida: se encarga de escribir en el archivo de salida los de una cola.
+- Parametros de entrada: apuntador a la cola 
+- Parametros de salida: 
+*/
 void writeSalida(COLA *q, FILE *f){
 
 	NODO *first = q->primero;
@@ -397,6 +413,12 @@ void writeSalida(COLA *q, FILE *f){
 
 }
 
+/*
+- ProcEnEJec: permite obtener el apuntador al proceso que se encuentra en ejecu-
+ción.
+- Parametros de entrada: apuntador a la estructura de colas.
+- Parametros de salida: objeto tipo Nodo que contiene el proceso en ejecución.
+*/
 NODO *ProcEnEjec(EstrucSched *s){
 
 	COLA *cola = s->enEjecucion;
@@ -409,4 +431,5 @@ NODO *ProcEnEjec(EstrucSched *s){
 		}
 		tmp = tmp->next;
 	}
+	return(0);
 }

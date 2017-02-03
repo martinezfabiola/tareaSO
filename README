@@ -7,23 +7,25 @@ DESCRICIÓN DEL PROGRAMA
 mayor prioridad corresponde a la cola ¨qo¨ y la de menor prioridad a la cola 
 ¨q5¨. Esta estructura de colas tipo EstrucShed contiene a su vez nodos de tipo 
 Nodo que se pueden manejar con apuntadores al nodo siguiente y al nodo anterior 
-de cada cola respectivamente. Dichos nodos contienen los procesos que seran e-
+de cada cola respectivamente. Dichos nodos contienen los procesos que serán e-
 jecutados por el planificador, estos procesos son del tipo Proceso y tiene la 
-informacion y estado de cada proceso (PID, Estado, Tiempo de ejecuion, Comando).
+información y estado de cada proceso (PID, Estado, Tiempo de ejecución, Comando).
 
 - La declaración de la estructura de colas de prioridad, asi como el prototipo 
-de cada función y las librerias usadas se encuentran en el archivo ¨pscheduler.h.
+de cada función y las librerías usadas se encuentran en el archivo ¨pscheduler.h.
 
-- Se crearon distintas funciones usadas por las colas para el manejo de los pro-
-cesos como insertar, eliminar, cambiar estado del proceso, etc. Dichas funiones
-se encuentra en el archivo ¨pscheduler.c¨.
+- Se implementaron distintas rutinas manejadas por las estructuras de colas para 
+la realización de la planificación de procesos como insertar, eliminar, cambiar 
+estado del proceso, etc. A su vez se crearon otras funciones que son usadas por
+estas rutinas para su mejor descempeno. Dichas procedimientos y rutinas se en-
+cuentra en el archivo ¨pscheduler.c¨. 
 
-- El programa principal ofrece al usuario a as disinttas opciones con las cuales
-trabajan los procesos y asi poder hacer uso de ellas, dicho programa se encuen-
+- El programa principal ofrece al usuario las distintas opciones con las cuales
+trabajan los procesos y así poder hacer uso de ellas, dicho programa se encuen-
 tra en el archivo main.c
 
 - Finalmente se creó un archivo makefile que permite compilar de forma simultá-
-nea las dependecias de los archivosfuentes para producir el ejecutable.
+nea las dependencias de los archivos fuente para producir el ejecutable.
 
 --------------------------------------------------------------------------------
 EJECUCIÓN
