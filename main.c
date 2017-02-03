@@ -1,4 +1,4 @@
-/***************************************************************************************************
+/*******************************************************************************
 * Universidad Simon Bolivar
 * Departamento de Computacion y Tecnologia de la Informacion
 * CI3825: Laboratorio de Sistemas Operativos 
@@ -15,10 +15,8 @@
 * Prof. Angela Di Serio
 *
 * Febrero, 2017.
-***************************************************************************************************/
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+*******************************************************************************/
+#include "pscheduler.h"
 
 int main(int argc, char *argv[])
 {
@@ -33,7 +31,6 @@ int main(int argc, char *argv[])
 	// Creamos estructura de datos
 	EstrucSched *estructura = Construye(argv[1]);
 	
-	// Inicializamos variables
 	long PID;
 	char Estado;
 	short Prioridad;
@@ -42,12 +39,12 @@ int main(int argc, char *argv[])
 	char opcion;
 
 	do{
-		printf("\t\t\tPSCHEDULER\n");
+		printf("\n\t\t\tPSCHEDULER\n");
 		printf("Bienvenido al planificador de procesos: Indique la opcion que desea\n");
 		printf("1 ~ Insertar Proceso\n");
 		printf("2 ~ Eliminar Proceso\n");
-		printf("3 ~ Eliminar Proceso en Ejecucion");
-		printf("4 ~ Proximo Proceso a Planificar");
+		printf("3 ~ Eliminar Proceso en Ejecucion\n");
+		printf("4 ~ Proximo Proceso a Planificar\n");
 		printf("5 ~ Cambiar estado del Proceso\n");
 		printf("6 ~ Mostrar el contenido del pscheduler\n");
 		printf("7 ~ Salir\n");
@@ -58,61 +55,57 @@ int main(int argc, char *argv[])
 			switch(opcion){
 			
 				case '1':
-					printf("Insertar proceso");
-					printf("Introduzca en el orden: PID  prioridad  tiempo_ejecucion comando");
+					printf("\nIntroduzca en el orden: PID  prioridad  tiempo_ejecucion comando\n");
 					scanf("%li %hi %f %s", &PID, &Prioridad, &Time, Comando);
 
 					Proceso *p = (Proceso *) malloc(sizeof(Proceso));
 					init_proceso(p, PID, Time, 'L', Comando);
 					InsertarProceso(estructura, p, Prioridad);
 
-					printf("Se inserto proceso correctamente\n");
+					printf("\nProceso insertado correctamente\n");
 					break;
 				
 				case '2':
-					printf("Eliminar proceso");
-					printf("Introduzca: PID  prioridad");
+					printf("\nIntroduzca los argumentos en el orden: PID prioridad\n");
 					scanf("%hi %li", &PID, &Prioridad);
 					ElimProceso(estructura, PID, Prioridad);
 
-					printf("Se elimino proceso correctamente");
+					printf("\nSe elimino proceso correctamente");
 					break;
 
 				case '3':
-					printf("Eliminar proceso en ejecucion");
 					ElimProcesoE(estructura);
-					printf("Se elimino proceso en ejecucion correctamente");
+					
+					printf("\nSe elimino proceso en ejecucion correctamente");
 					break;
 
-				case '4':
-					printf("Proximo proceso a planificar");
-					ProxProceso(estructura);
+				case '4':{
+					Proceso *proc = ProxProceso(estructura);
+					
+					printf("\nEl proximo proceso a planificar es el de PID: %li", p->PID);								
 					break;
-
+				}
 				case '5':
-					printf("Cambiar estado del proceso");
-					printf("Introduzca si desea cambiar el estado a Listo (L) o en ejecucion (E)");
-					scanf("%s", Estado);
-					// No se que como incializar el proce
-					CambiarEstado(estructura, Proceso* p, Estado)
+					printf("\nIntroduzca si desea cambiar el estado a Listo (L) o en ejecucion (E)");
+					scanf("%s", &Estado);
+
+					//CambiarEstado(estructura, Proceso* p, Estado)
 					break;
 
 				case '6':
-					printf("ESTADO ACTUAL DE LA ESTRUCTURA DE COLAS\n");
+					printf("\nEstado actual de la estructura de colas\n");
 					Imprime(estructura);
+					break;
 
 				case '7':
-					printf("Antes de salir inidique el nombre del archivo de salida");
-					char* archivo_salida;
-					scanf("%s", archivo_salida)
+					Salida(estructura, argv[2]);
+					printf("\nHasta luego!\n");
 					exit(0);
 
 				default:
-					//scanf("%*s");
-					printf("Su opcion debe estar 1 y 7\n");
+					printf("Su opcion debe estar entre los valores 1 y 7\n");
 					break;
 			}
-		}
 
 	}while(opcion !=8);
 

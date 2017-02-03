@@ -8,23 +8,17 @@
 ------------------------------ David -------------------------------------------
 Actualizado @ 02/02/07
 
-Compilar con debugger:
+Uso del debugger (gdb):
 
-gcc pscheduler.c -g (el manual de gcc indica que se permite usar -o)
-gdb ./a.out
-set args datos
-show args
+Compilar
+gdb --args pscheduler datos salida
+show args (opcional para ver los argumentos)
 run
 backtrace
 
-@ ElimProcesoE
-	- Verificar correcto funcionamiento
-
-Faltan: ElimProceso, Readme, Documentacion, Escribir archivo de salida, makefile
+Faltan: ProxProceso, ElimProcesoE, Readme, Documentacion
 
 Ver si el manejo de la memoria es actualmente limpio.
-
-Que hay con que el header se llame igual que el principal?
 
 --------------------------------------------------------------------------------
 

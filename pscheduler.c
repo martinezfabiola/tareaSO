@@ -1,4 +1,4 @@
-/***************************************************************************************************
+/*******************************************************************************
 * Universidad Simon Bolivar
 * Departamento de Computacion y Tecnologia de la Informacion
 * CI3825: Laboratorio de Sistemas Operativos 
@@ -15,18 +15,12 @@
 * Prof. Angela Di Serio
 *
 * Febrero, 2017.
-***************************************************************************************************/
-
-/*
-	Este es el programa principal.
-*/
-
+********************************************************************************/
 #include "pscheduler.h"
 
 /*
-- init_EstrucShec: permite inicializar una estructura de colas.
+- init_EstrucSched: procedimiento que inicializa una estructura de colas.
 - Parametros de entrada: apuntador a la estructura de cola a inicializar.
-- Parametros de salida:
 */
 void init_EstrucSched(EstrucSched *E){
 	E->q0 = (COLA *) malloc(sizeof(COLA));
@@ -47,10 +41,9 @@ void init_EstrucSched(EstrucSched *E){
 }
 
 /*
-- init_cola: permite inicializar una cola.
-- Parametros de entrada: apuntador a la cola a inicializar y entero que indica la prioridad de la 
-cola.
-- Parametros de salida:
+- init_cola: procedimiento que inicializa una cola de nodos.
+- Parametros de entrada: apuntador a la cola a inicializar y entero que indica 
+  la prioridad de la cola.
 */
 void init_cola(COLA *q, int numero){
 	q->primero = NULL;
@@ -60,9 +53,9 @@ void init_cola(COLA *q, int numero){
 }
 
 /*
-- init_nodo: permite inicializar un nodo.
-- Parametros de entrada: apuntador al nodo a inicializar y apuntador al proceso de dicho nodo.
-- Parametros de salida:
+- init_nodo: procedimiento que inicializa un nodo.
+- Parametros de entrada: apuntador al nodo a inicializar y apuntador al proceso 
+  de dicho nodo.
 */
 void init_nodo(NODO *n, Proceso *p){
 	n->proceso = p;
@@ -71,10 +64,9 @@ void init_nodo(NODO *n, Proceso *p){
 }
 
 /*
-- init_proceso: permite inicializar un proceso.
-- Parametros de entrada: apuntador al proceso a inicializar, identificador del proceso, tiempo fic-
-ticio, estado del proceso y comando.
-- Parametros de salida:
+- init_proceso: procedimiento que inicializa un proceso.
+- Parametros de entrada: apuntador al proceso a inicializar, identificador del 
+  proceso, tiempo ficticio, estado del proceso y comando.
 */
 void init_proceso(Proceso *p, long procesoid, float time, char estado, char* comando){
 	p->PID = procesoid;
@@ -84,11 +76,11 @@ void init_proceso(Proceso *p, long procesoid, float time, char estado, char* com
 }
 
 /*  
-	- Construye: inicializa cada cola a partir de un archivo de texto.
-	- Parametros de entrada: nombre del archivo de texto que contiene la información de estado ini-
-	cial correspondiente a cada cola.
-	- Parametros de salida: estructura tipo EstrucSched que contiene cada cola con los datos leidos,
-	una estructura de colas.
+	- Construye: inicializa el planificador de procesos desde un archivo de texto.
+	- Parametros de entrada: nombre del archivo de texto que contiene la información 
+	  del planificador.
+	- Parametros de salida: estructura tipo EstrucSched que representa el plani-
+	ficador de procesos
 */
 EstrucSched* Construye(char *filename){
 
@@ -96,14 +88,12 @@ EstrucSched* Construye(char *filename){
 	EstrucSched *E = (EstrucSched *) malloc(sizeof(EstrucSched));
 	init_EstrucSched(E);
 
-	// Inicializamos los datos de procesos a leer
 	long PID;
 	char Estado;
 	short Prioridad;
 	float Time;
 	char Comando[100];
 
-	// Leemos archivo 
 	FILE *fp = fopen(filename, "r");
 
 	while(fscanf(fp, "%li %c %hi %f %s", &PID, &Estado, &Prioridad, &Time, Comando) != EOF){
@@ -120,9 +110,9 @@ EstrucSched* Construye(char *filename){
 
 /*	
 	- InsertarProceso: permite insertar un proceso en la cola de prioridad que corresponda.
-	- Parametros de entrada: apuntador a una estructura de cola tipo EstrucShed, apuntador al proce-
-	so y entero que indica la prioridad de la cola a insertar proceso.
-	- Parametros de salida:
+	- Parametros de entrada: s apuntador a una estructura de cola tipo EstrucShed, 
+	  p apuntador al proceso, prioridad entero que indica la prioridad de la cola 
+	  donde se insertara el proceso.
 */
 void InsertarProceso(EstrucSched* s, Proceso *p, short prioridad){
 	
@@ -149,10 +139,9 @@ void InsertarProceso(EstrucSched* s, Proceso *p, short prioridad){
 }
 
 /*	
-	- insertarProc: permite insertar un proceso en un cola.
-	- Parametros de entrada: apuntador a la cola a la cual se insertará el proceso y apuntador al 
-	proceso a insertar.
-	- Parametros de salida:
+	- insertarProc: procedimiento auxiliar para insertar un proceso en un cola.
+	- Parametros de entrada: q apuntador a la cola en la cual se insertará el 
+	  proceso y p apuntador al proceso a insertar.
 */
 void insertarProc(COLA *q, Proceso *p){
 	
@@ -289,7 +278,7 @@ void ElimProceso(EstrucSched *s, long pid, short prio){
 	if (prio == 5) cola = s->q5;
 
 	NODO* tmp = cola->primero;
-	
+
 	while(tmp != NULL) {
 		if (tmp->proceso->PID == pid) {
 			if (cola->size == 1){
@@ -361,4 +350,45 @@ void Imprimir(COLA *q){
 		printf("%li\t%c\t%.2f\t%s\n", proximo->proceso->PID, proximo->proceso->Estado, proximo->proceso->Time, proximo->proceso->Comando);
 		proximo = proximo->next;
 	}
+
+	printf("\n");
+}
+
+int Salida(EstrucSched *s, char *filename){
+
+	FILE *f = fopen(filename, "w");
+
+	if (!f){
+		printf("No se pudo abrir el archivo, invoque la funcion nuevamente");
+		return -1;
+	}
+
+	if(s->q0->size != 0) writeSalida(s->q0, f);
+	if(s->q1->size != 0) writeSalida(s->q1, f);
+	if(s->q2->size != 0) writeSalida(s->q2, f);
+	if(s->q3->size != 0) writeSalida(s->q3, f);
+	if(s->q4->size != 0) writeSalida(s->q4, f);
+	if(s->q5->size != 0) writeSalida(s->q5, f);
+
+	fclose(f);
+	return 0;
+
+}
+
+void writeSalida(COLA *q, FILE *f){
+
+	NODO *first = q->primero;
+	fprintf(f, "Cola %d\n", q->nro);
+	fprintf(f, "PID\tEstado\tTiempo\tComando\n");
+	fprintf(f, "%li\t%c\t%.2f\t%s\n", first->proceso->PID, first->proceso->Estado, first->proceso->Time, first->proceso->Comando);
+	
+	NODO *proximo = first->next;
+
+	while(proximo != NULL){
+		fprintf(f, "%li\t%c\t%.2f\t%s\n", proximo->proceso->PID, proximo->proceso->Estado, proximo->proceso->Time, proximo->proceso->Comando);
+		proximo = proximo->next;
+	}
+
+	fprintf(f, "\n");
+
 }

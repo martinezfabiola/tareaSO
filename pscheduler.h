@@ -89,3 +89,7 @@ void init_nodo(NODO *n, Proceso *p);
 void init_cola(COLA *q, int numero);
 
 void init_EstrucSched(EstrucSched *E);
+
+int Salida(EstrucSched *E, char *filename);
+
+void writeSalida(COLA *q, FILE *f);
