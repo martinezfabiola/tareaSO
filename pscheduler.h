@@ -71,57 +71,53 @@ void InsertarProceso(EstrucSched *s, Proceso *p, short prioridad);
 
 /*
 - ElimProceso: se encarga de eliminar un proceso de la estructura de colas.
-- Parametros de entrada: apuntador a la estructura de cola tipo EstrucShed, i-
-dentificador del proceso a eliminar y prioridad de la cola donde se quiere eli-
-minar el proceso.
-- Parametros de salida:
+- Parametros de entrada: s apuntador a la estructura de cola tipo EstrucShed, 
+pid identificador del proceso a eliminar, prio prioridad de la cola donde se 
+quiere eliminar el proceso.
 */
 void ElimProceso(EstrucSched *s, long pid, short prio);
 
 /*
 - ElimProcesoE: se encarga de eliminar el próximo proceso a ejecutar, el único 
 que tiene en su estado el valor de E (EnEjecucion).
-- Parametros de entrada: apuntador a la estructura de cola tipo EstrucShed en la 
+- Parametros de entrada: s apuntador a la estructura de cola tipo EstrucShed en la 
 que se quiere eliminar el proceso.
 */
 void ElimProcesoE(EstrucSched *s);
 
 /*
-- ProxProc: permite obtener el siguiente proceso a planificar.
-- Parametros de entrada: apuntador a la estructura de cola tipo EstrucShed y a-
-puntador a la cola en la que se buscara el proximo proceso.
-- Parametros de salida: objeto tipo proceso que representa el proximo proceso a 
-planificar.
+- ProxProceso: se encarga de buscar en las colas el proximo proceso que este lis-
+para ejecutar de cambiando su estado de Listo a EnEjecucion
+- Parametros de entrada: s apuntador a la estructura de colas.
+- Parametros de salida: Proceso apuntador al proximo proceso a ejecutar.
 */
 Proceso *ProxProceso(EstrucSched *s);
 
 /*
 - CambiarEstado: permite cambiar el valor del estado de un proceso, suponiendo 
-que los valores introducidos por el usuario son Listo o EnEjecucion.
-- Parametros de entrada: apuntador a la estructura de colas tipo EstrucShed, a-
-puntador al proceso al cual se le quiere cambiar estado.
-- Parametros de salida:
+que los valores introducidos por el usuario son Listo (L) o EnEjecucion (E).
+- Parametros de entrada: s apuntador a la estructura de colas tipo EstrucShed, p 
+apuntador al proceso al cual se le quiere cambiar estado, newestado estado que se
+quiere establecer.
 */
 void CambiarEstado(EstrucSched *s, Proceso* p, Estado newestado);
 
 /*  
 	- Construye: inicializa el planificador de procesos desde un archivo de texto.
-	- Parametros de entrada: nombre del archivo de texto que contiene la infor-
-	mación del planificador.
-	- Parametros de salida: estructura tipo EstrucSched que representa el plani-
-	ficador de procesos
+	- Parametros de entrada: filename nombre del archivo de texto que contiene la 
+	información del planificador.
+	- Parametros de salida: EstrucSched que representa el planificador de procesos
 */
 EstrucSched *Construye(char *filename);
 
 /*
 - Imprime: se encarga de mostrar por salida estandar el estado correspondiente a 
 cada cola.
-- Parametros de entrada: apuntador a la estructura de cola tipo EstrucShed.
-- Parametros de salida:
+- Parametros de entrada: s apuntador a la estructura de cola tipo EstrucShed.
 */
 void Imprime(EstrucSched *s);
 
-// Prototipos de funciones secundarias
+// Prototipos de funciones secundarias o auxiliares
 
 /*	
 	- insertarProc: procedimiento auxiliar para insertar un proceso en un cola.
@@ -132,39 +128,38 @@ void insertarProc(COLA *q, Proceso *p);
 
 /*
 - ProxProc: permite obtener el siguiente proceso a planificar.
-- Parametros de entrada: apuntador a la estructura de cola tipo EstrucShed y a-
-puntador a la cola en la que se buscara el proximo proceso.
-- Parametros de salida: objeto tipo proceso que representa el proximo proceso a 
-planificar.
+- Parametros de entrada: s apuntador a la estructura de cola tipo EstrucShed y q
+apuntador a la cola en la que se buscara el proximo proceso.
+- Parametros de salida: Proceso que representa el proximo proceso a planificar.
 */
 Proceso *ProxProc(EstrucSched *s, COLA *q);
 
 /*
-- Imprimir: perimite mostrar la informacion correspondiente a cada cola sobre 
+- Imprimir: permite mostrar la informacion correspondiente a cada cola sobre 
 PID, Estado, Tiempo y Comando.
-- Parametros de entrada: apuntador a la cola a la cual se quiere mostrar su estado.
-- Parametros de salida:
+- Parametros de entrada: q apuntador a la cola a la cual se quiere mostrar su estado.
 */
 void Imprimir(COLA *q);
 
 /*
 - init_proceso: procedimiento que inicializa un proceso.
-- Parametros de entrada: apuntador al proceso a inicializar, identificador del 
-  proceso, tiempo ficticio, estado del proceso y comando.
+- Parametros de entrada: p apuntador al proceso a inicializar, procesoid identificador 
+del proceso, time tiempo ficticio, estado estado del proceso, comando comando del
+proceso.
 */
 void init_proceso(Proceso *p, long procesoid, float time, char estado, char* comando);
 
 /*
 - init_nodo: procedimiento que inicializa un nodo.
-- Parametros de entrada: apuntador al nodo a inicializar y apuntador al proceso 
+- Parametros de entrada: n apuntador al nodo a inicializar y p apuntador al proceso 
   de dicho nodo.
 */
 void init_nodo(NODO *n, Proceso *p);
 
 /*
 - init_cola: procedimiento que inicializa una cola de nodos.
-- Parametros de entrada: apuntador a la cola a inicializar y entero que indica 
-  la prioridad de la cola.
+- Parametros de entrada: q apuntador a la cola a inicializar y numero entero que 
+indica la prioridad de la cola.
 */
 void init_cola(COLA *q, int numero);
 
@@ -176,23 +171,22 @@ void init_EstrucSched(EstrucSched *E);
 
 /*
 - Salida: se encarga se escribir en el archivo el estado actual de cada cola.
-- Parametros de entrada: apuntador a la estructura de colas y el nombre del ar-
-chivo de salida donde se guardaran los datos.
-- Parametros de salida: 
+- Parametros de entrada:s  apuntador a la estructura de colas y filename el nombre
+del archivo de salida donde se guardaran los datos.
+- Parametros de salida: entero, -1 si es incorrecta la operacion, 0 en caso contrario
 */
 int Salida(EstrucSched *E, char *filename);
 
 /*
 - writeSalida: se encarga de escribir en el archivo de salida los de una cola.
-- Parametros de entrada: apuntador a la cola 
-- Parametros de salida: 
+- Parametros de entrada: q apuntador a la cola, f archivo con formato FILE.
 */
 void writeSalida(COLA *q, FILE *f);
 
 /*
-- ProcEnEJec: permite obtener el apuntador al proceso que se encuentra en ejecu-
-ción.
+- ProcEnEjec: permite obtener el apuntador al nodo que contiene el proceso en 
+ejecución.
 - Parametros de entrada: apuntador a la estructura de colas.
-- Parametros de salida: objeto tipo Nodo que contiene el proceso en ejecución.
+- Parametros de salida: objeto tipo NODO que contiene el proceso en ejecución.
 */
 NODO *ProcEnEjec(EstrucSched *s);
