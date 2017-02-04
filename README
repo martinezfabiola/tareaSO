@@ -3,22 +3,23 @@ Planificador de Procesos pscheduler 04/02/2017
 --------------------------------------------------------------------------------
 DESCRICIÓN DEL PROGRAMA
 --------------------------------------------------------------------------------
-- La estructura de datos utilizada fue una cola de prioridades, donde la cola
-mayor prioridad corresponde a la cola ¨qo¨ y la de menor prioridad a la cola 
-¨q5¨. Esta estructura de colas tipo EstrucShed contiene a su vez nodos de tipo 
-Nodo que se pueden manejar con apuntadores al nodo siguiente y al nodo anterior 
-de cada cola respectivamente. Dichos nodos contienen los procesos que serán e-
-jecutados por el planificador, estos procesos son del tipo Proceso y tiene la 
-información y estado de cada proceso (PID, Estado, Tiempo de ejecución, Comando).
+- La estructura de datos utilizada para el planificador está comprendida por 
+seis colas con prioridad. La cola de mayor prioridad corresponde a la cola "q0" 
+mientras que la de menor corresponde a la cola "q5". Esta estructura de colas esta
+definida con el nombre de EstrucShed y contiene a su vez nodos definidos como NODO
+que son manejados mediante apuntadores al nodo anterior y al nodo siguiente en cada 
+cola, adicionalmente, contiene un numero de cola cuyo valor es su prioridad. 
+Los nodos contienen los procesos que serán manejados por el planificador, estos 
+procesos son del tipo Proceso y tienen la información y estado de cada proceso 
+(PID, Estado,Tiempo de ejecución, Comando).
 
-- La declaración de la estructura de colas de prioridad, asi como el prototipo 
-de cada función y las librerías usadas se encuentran en el archivo ¨pscheduler.h.
+- La declaración de la estructura del planificador de procesos, asi como el proto-
+tipo de cada función y las librerías utiizadas se encuentran en el archivo pscheduler.h.
 
-- Se implementaron distintas rutinas manejadas por las estructuras de colas para 
-la realización de la planificación de procesos como insertar, eliminar, cambiar 
-estado del proceso, etc. A su vez se crearon otras funciones que son usadas por
-estas rutinas para su mejor descempeno. Dichas procedimientos y rutinas se en-
-cuentra en el archivo ¨pscheduler.c¨. 
+- Se implementaron distintas rutinas manejadoras de las estructuras de colas para 
+la planificación de procesos como insertar, eliminar, cambiar estado del proceso, 
+etc. A su vez se crearon otras funciones que utilizan estas rutinas para su mejor 
+desempeño. Los procedimientos y rutinas se encuentra en el archivo ¨pscheduler.c¨. 
 
 - El programa principal ofrece al usuario las distintas opciones con las cuales
 trabajan los procesos y así poder hacer uso de ellas, dicho programa se encuen-
@@ -30,13 +31,13 @@ nea las dependencias de los archivos fuente para producir el ejecutable.
 --------------------------------------------------------------------------------
 EJECUCIÓN
 --------------------------------------------------------------------------------
-Desde la linea de comando se debe invocar:
+Desde la linea de comandos en la carpeta que contiene los archivos se debe invocar:
 
 1. makefile
-2. $ pscheduler datos archsalid
+2. ./pscheduler archdatos archsalida
 
-Donde datos es el archivo de entrada que contiene la información de los procesos 
-y archsalid es el archivo de salida en el cual se mostrará el estado actual de 
+Donde archdatos es el archivo de entrada que contiene la información de los procesos 
+y archsalida es el archivo de salida en el cual se mostrará el estado actual de 
 cada proceso.
 
 ================================================================================

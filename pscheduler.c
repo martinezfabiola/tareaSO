@@ -174,24 +174,10 @@ que se quiere eliminar el proceso.
 void ElimProcesoE(EstrucSched *s){
 	
 	if(s->enEjecucion){
-		NODO *EnEjecucion = ProcEnEjec(s);
-		if (s->enEjecucion->size == 1){
-			s->enEjecucion->primero = NULL;
-			s->enEjecucion->ultimo = NULL;
-		}
-		else{
-			if(EnEjecucion->prev){
-				EnEjecucion->prev->next = EnEjecucion->next;
-			}
 
-			if(EnEjecucion->next){
-				EnEjecucion->next->prev = EnEjecucion->prev;
-			}
-		}
-		free(EnEjecucion->proceso);
-		free(EnEjecucion);
-		s->enEjecucion->size--;
-		s->enEjecucion = NULL;
+		NODO *EnEjecucion = ProcEnEjec(s);
+
+		ElimProceso(s, EnEjecucion->proceso->PID, s->enEjecucion->nro);
 	}
 }
 
