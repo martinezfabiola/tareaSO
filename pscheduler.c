@@ -239,7 +239,6 @@ quiere eliminar el proceso.
 */
 void ElimProceso(EstrucSched *s, long pid, short prio){
 	COLA *cola = NULL;
-	int validCola = 1;
 
 	if (prio == 0) cola = s->q0;
 	if (prio == 1) cola = s->q1;
@@ -247,48 +246,45 @@ void ElimProceso(EstrucSched *s, long pid, short prio){
 	if (prio == 3) cola = s->q3;
 	if (prio == 4) cola = s->q4;
 	if (prio == 5) cola = s->q5;
-	else validCola = 0;
 
-	if (validCola){
-		NODO* tmp = cola->primero;
+	NODO* tmp = cola->primero;
 
-		if(s->enEjecucion){
-			if(ProcEnEjec(s)->proceso->PID == pid) s->enEjecucion = NULL;
-		}
+	if(s->enEjecucion){
+		if(ProcEnEjec(s)->proceso->PID == pid) s->enEjecucion = NULL;
+	}
 
-		while(tmp != NULL) {
-			
-			if (tmp->proceso->PID == pid) {
+	while(tmp != NULL) {
+		
+		if (tmp->proceso->PID == pid) {
 
 
-				if (cola->size == 1){
-					cola->primero = NULL;
-					cola->ultimo = NULL;
-				}
-
-				else{
-					if (!tmp->prev){
-						cola->primero = tmp->next;
-						cola->primero->prev = NULL; 
-					}
-					else if (!tmp->next){
-						cola->ultimo = tmp->prev;
-						cola->ultimo->next = NULL;
-					}
-					else{
-						tmp->prev->next = tmp->next;
-						tmp->next->prev = tmp->prev;
-					}
-				}
-				break;
+			if (cola->size == 1){
+				cola->primero = NULL;
+				cola->ultimo = NULL;
 			}
-			tmp = tmp->next;
+
+			else{
+				if (!tmp->prev){
+					cola->primero = tmp->next;
+					cola->primero->prev = NULL; 
+				}
+				else if (!tmp->next){
+					cola->ultimo = tmp->prev;
+					cola->ultimo->next = NULL;
+				}
+				else{
+					tmp->prev->next = tmp->next;
+					tmp->next->prev = tmp->prev;
+				}
+			}
+			break;
 		}
-		if(tmp != NULL){
-			free(tmp->proceso);
-			free(tmp);
-			cola->size--;
-		}
+		tmp = tmp->next;
+	}
+	if(tmp != NULL){
+		free(tmp->proceso);
+		free(tmp);
+		cola->size--;
 	}
 }
 
